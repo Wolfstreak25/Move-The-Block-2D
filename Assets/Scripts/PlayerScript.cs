@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour
 {
     public Rigidbody2D rigidbody2d;
+    public GameObject LevelWonPanel;
     public float speed;
     public float movespeed=1;
     //public float Velocity;
@@ -12,10 +13,14 @@ public class PlayerScript : MonoBehaviour
     {
         
     }
-
+    private bool isGameWon;
     void Update()
     {
         // Movement Parameters
+       if(isGameWon == true)
+       {
+        return;
+       }
        if( Input.GetAxis("Horizontal") > 0 ) //Movement to right
        {
         rigidbody2d.velocity =  new Vector2 (speed*movespeed, 0f);
@@ -43,7 +48,9 @@ public class PlayerScript : MonoBehaviour
         {
             if(other.tag == "Door")
             {
-                Debug.Log("Level Complete"); 
+                Debug.Log("Level Complete");
+                LevelWonPanel.SetActive(true); 
+                isGameWon=true;
             }
             if(other.tag == "Portal")
             {
