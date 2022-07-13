@@ -8,6 +8,7 @@ TagManager:
   - Portal
   - Portal2
   - Restart
+  - Obstacle
   layers:
   - Default
   - TransparentFX

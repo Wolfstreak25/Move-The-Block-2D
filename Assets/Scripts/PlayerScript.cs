@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour
 {
     public Rigidbody2D rigidbody2d;
     public GameObject LevelWonPanel;
+    public GameObject LevelLostPanel;
     public float speed;
     public float movespeed=1;
     //public float Velocity;
@@ -13,11 +15,12 @@ public class PlayerScript : MonoBehaviour
     {
         
     }
-    private bool isGameWon;
+    
+    private bool isGameOver = false;
     void Update()
     {
         // Movement Parameters
-       if(isGameWon == true)
+       if(isGameOver == true)
        {
         return;
        }
@@ -50,7 +53,13 @@ public class PlayerScript : MonoBehaviour
             {
                 Debug.Log("Level Complete");
                 LevelWonPanel.SetActive(true); 
-                isGameWon=true;
+                isGameOver=true;
+            }
+            if(other.tag == "Obstacle")
+            {
+                Debug.Log("Level Lost");
+                LevelLostPanel.SetActive(true); 
+                isGameOver=true;
             }
             if(other.tag == "Portal")
             {
@@ -60,5 +69,12 @@ public class PlayerScript : MonoBehaviour
             {
                 transform.position = new Vector2(3.0f, -3.0f);
             }    
+        }
+
+        public void RestartGame()
+        
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            Debug.Log("Button Clicked");
         }
 }
