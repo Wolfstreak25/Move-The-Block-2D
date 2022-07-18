@@ -8,22 +8,38 @@ public class PlayerScript : MonoBehaviour
     public Rigidbody2D rigidbody2d;
     public GameObject LevelWonPanel;
     public GameObject LevelLostPanel;
+    public GameObject ResumeGamePanel;
     public float speed;
     public float movespeed=1;
-    //public float Velocity;
+    public static bool IsGamePaused = false;
+    private bool isGameOver = false;
+
     void Start()
     {
-        
+
     }
     
-    private bool isGameOver = false;
+    
     void Update()
     {
-        // Movement Parameters
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if(IsGamePaused == true)
+            {
+                ResumeGame ();
+            }
+            else
+            {
+                PauseGame ();
+            }
+        }
+
+     // Movement Parameters
        if(isGameOver == true)
        {
-        return;
+            return;
        }
+
        if( Input.GetAxis("Horizontal") > 0 ) //Movement to right
        {
         rigidbody2d.velocity =  new Vector2 (speed*movespeed, 0f);
@@ -46,26 +62,27 @@ public class PlayerScript : MonoBehaviour
        }
 
     }
+
     //Trigger
        private void OnTriggerEnter2D (Collider2D other) 
         {
             if(other.tag == "Door")
-            {
+            {   
                 Debug.Log("Level Complete");
                 LevelWonPanel.SetActive(true); 
                 isGameOver=true;
             }
-            if(other.tag == "Obstacle")
+            else if(other.tag == "Obstacle")
             {
                 Debug.Log("Level Lost");
                 LevelLostPanel.SetActive(true); 
                 isGameOver=true;
             }
-            if(other.tag == "Portal")
+            else if(other.tag == "Portal")
             {
                 transform.position = new Vector2(-5.0f, 1.0f);
             }  
-            if(other.tag == "Portal2")
+            else if(other.tag == "Portal2")
             {
                 transform.position = new Vector2(3.0f, -3.0f);
             }    
@@ -74,7 +91,24 @@ public class PlayerScript : MonoBehaviour
         public void RestartGame()
         
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             Debug.Log("Button Clicked");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
         }
+        public void ResumeGame ()
+        {
+            ResumeGamePanel.SetActive(false);
+            Time.timeScale = 1; 
+            IsGamePaused = false;
+        }
+        void PauseGame ()
+        {
+            ResumeGamePanel.SetActive(true);
+            Time.timeScale = 0;
+            IsGamePaused = true;
+        }
+        public void QuitGame()
+        {
+            Debug.Log("Quit");
+        }
+        
 }
